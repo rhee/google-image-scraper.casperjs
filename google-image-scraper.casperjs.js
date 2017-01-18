@@ -1,9 +1,6 @@
 #!/bin/sh
-
-// bin/true 2>/dev/null; exec casperjs              --web-security=false
-// --ignore-ssl-errors=true --verbose --log-level=info "$0" "$@" bin/true
-// 2>/dev/null; exec casperjs --debug=true --web-security=false
-// --ignore-ssl-errors=true --verbose --log-level=info "$0" "$@"
+//bin/true 2>/dev/null; exec casperjs --web-security=false --ignore-ssl-errors=true --verbose --log-level=info "$0" "$@"
+//bin/true 2>/dev/null; exec casperjs --debug=true --web-security=false --ignore-ssl-errors=true --verbose --log-level=info "$0" "$@"
 
 var config = {
     agent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50' +
