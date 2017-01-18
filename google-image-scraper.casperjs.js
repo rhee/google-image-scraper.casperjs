@@ -70,10 +70,9 @@ var cli_keywords = casper
  */
 
 var cli_urls = [];
-// cli_keywords.forEach(function (keyword) {
-//     var q = encodeURIComponent(keyword);
-//     cli_urls.push('https://www.google.com/search?q=' + q + '&tbas=0&tbs=isz:lt,islt:2mp,ic:color,itp:photo,qdr:m&tbm=isch')
-// });
+// cli_keywords.forEach(function (keyword) {     var q =
+// encodeURIComponent(keyword); cli_urls.push('https://www.google.com/search?q='
+// + q + '&tbas=0&tbs=isz:lt,islt:2mp,ic:color,itp:photo,qdr:m&tbm=isch') });
 cli_keywords.forEach(function (keyword) {
     var q = encodeURIComponent(keyword);
     cli_urls.push('https://www.google.com/search?q=' + q + '&tbas=0&tbs=isz:lt,islt:2mp&tbm=isch')
@@ -107,45 +106,16 @@ var visited_images = {};
 
 function handle_page(casper) {
 
-    //casper.echo('=== handle_page: ' + casper.getCurrentUrl());
-
     if (queued_images.length > 0) {
         var image_link = queued_images.shift();
         visited_images[image_link] = image_link;
-        casper.echo('download: ' + image_link);
+        casper.echo('=== handle_page: download: ' + image_link);
         download_file_into(casper, image_link, download_dir, '.jpg', handle_page);
         return;
     }
 
-    if (queued_selectors.length > 0) {
-        var selector = queued_selectors.shift();
-        casper.echo('click: ' + selector);
-        try {
-            casper.click(selector);
-        } catch (e) {
-            casper.echo(e, 'ERROR');
-            casper.then(function () {
-                handle_page(casper);
-            });
-            return;
-        }
-        casper.wait(click_delay, function () {
-            var previews_selector = 'img.irc_mi';
-            var previews_link = casper.getElementsInfo(previews_selector);
-            for (var i = 0; i < previews_link.length; i++) {
-                var image_link = previews_link[i].attributes.src;
-                if (image_link && !(image_link in visited_images)) {
-                    queued_images.push(image_link);
-                    casper.then(function () {
-                        handle_page(casper)
-                    });
-                }
-            }
-        });
-        return;
-    }
-
     if (queued_selectors.length == 0) {
+        casper.echo('=== handle_page: get more thumbs');
         var thumbs_selector = 'div[data-async-rclass="search"] div'; // a.rg_l';
         var thumbs_selector_n = function (i) {
             return 'div[data-async-rclass="search"] div:nth-child(' + (i + 1) + ') a.rg_l'
@@ -154,13 +124,55 @@ function handle_page(casper) {
         for (var i = 0; i < thumbs_link.length; i++) {
             var selector = thumbs_selector_n(i);
             if (selector && !(selector in visited_selectors)) {
+                casper.echo('=== handle_page: new_selector: ' + selector);
                 visited_selectors[selector] = (i + 1);
                 queued_selectors.push(selector);
-                casper.then(function () {
-                    handle_page(casper)
-                });
             }
         }
+    }
+
+    if (queued_selectors.length > 0) {
+        try {
+            var selector = queued_selectors.shift();
+            casper.click(selector);
+            casper.echo('=== handle_page: click: ' + selector);
+        } catch (e) {
+            casper.echo(e, 'ERROR');
+            casper.then(function () {
+                handle_page(casper)
+            });
+            return;
+        }
+        casper
+            .wait(click_delay, function () {
+                var previews_selector = 'img.irc_mi';
+                var previews_link = casper.getElementsInfo(previews_selector);
+                for (var i = 0; i < previews_link.length; i++) {
+                    var image_link = previews_link[i].attributes.src;
+                    if (image_link && !(image_link in visited_images)) {
+                        casper.echo('=== handle_page: new_link: ' + image_link);
+                        queued_images.push(image_link);
+                    }
+                }
+                casper
+                    .then(function () {
+                        handle_page(casper)
+                    });
+            });
+        return;
+    }
+
+    var aa = this.evaluate(function () {
+        return {scrollY: window.scrollY, innerHeighth: window.innerHeight, scrollHeight: document.body.scrollHeight}
+    });
+
+    if (aa.scrollY + aa.innerHeight < aa.scrollHeight) {
+        casper.echo('=== handle_page: scroll: ' + aa.scrollY + aa.innerHeight + '/' + aa.scrollHeight);
+        casper
+            .scrollTo(0, aa.scrollY + aa.innerHeight)
+            .then(function () {
+                handle_page(casper)
+            })
     }
 
 }
