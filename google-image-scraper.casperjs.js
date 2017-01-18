@@ -92,7 +92,7 @@ casper.run(function () {}); // easy fix: put empty function
 // ////////////////////////////////////////////////
 // ////////////////////////////////////////////////
 
-var download_dir = 'data';
+var download_dir = '.'; //'data';
 var click_delay = 500; //5000;
 
 var queued_selectors = [];
