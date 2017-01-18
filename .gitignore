@@ -3,3 +3,4 @@ data/*
 log.csv
 node_modules/*
 *.lock
+*.log
