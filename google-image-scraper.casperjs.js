@@ -61,15 +61,7 @@ var cli_keywords = casper
     .args
     .slice(0);
 
-/**
- * url example:
- * https://www.google.com/search?q=%EA%B1%B8%EA%B7%B8%EB%A3%B9+-site:youtube.com+-site:youtu.be+-site:cyberspaceandtime.com+-site:1080.plus+-site:i1os.com+-site:linkis.com&tbm=isch&source=lnt&tbs=isz:lt,islt:2mp&sa=X&ved=0ahUKEwjogLbn_cvNAhXLj5QKHT1jDWAQpwUIFA&dpr=1&biw=1277&bih=744#q=%EA%B1%B8%EA%B7%B8%EB%A3%B9+-site:youtube.com+-site:youtu.be+-site:cyberspaceandtime.com+-site:1080.plus+-site:i1os.com+-site:linkis.com+-site:1080plus.com&tbas=0&tbs=isz:lt,islt:2mp,ic:color,itp:photo,qdr:m&tbm=isch
- */
-
 var cli_urls = [];
-// cli_keywords.forEach(function (keyword) {     var q =
-// encodeURIComponent(keyword); cli_urls.push('https://www.google.com/search?q='
-// + q + '&tbas=0&tbs=isz:lt,islt:2mp,ic:color,itp:photo,qdr:m&tbm=isch') });
 cli_keywords.forEach(function (keyword) {
     var q = encodeURIComponent(keyword);
     cli_urls.push('https://www.google.com/search?q=' + q + '&tbas=0&tbs=isz:lt,islt:2mp&tbm=isch')
