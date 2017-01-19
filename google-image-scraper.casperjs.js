@@ -19,7 +19,7 @@ var casper_options = {
 };
 
 var casper = require('casper').create(casper_options);
-var download_file_into = require('./download-file-into');
+var download_file_into = require('download-file-into');
 
 // ////////////////////////////////////////////////
 // ////////////////////////////////////////////////
