@@ -19,7 +19,7 @@ var casper_options = {
 };
 
 var casper = require('casper').create(casper_options);
-var download_file_into = require('./download-file-into');
+var download_file_into = require('download-file-into');
 
 // ////////////////////////////////////////////////
 // ////////////////////////////////////////////////
@@ -64,7 +64,8 @@ var cli_keywords = casper
 var cli_urls = [];
 cli_keywords.forEach(function (keyword) {
     var q = encodeURIComponent(keyword);
-    cli_urls.push('https://www.google.com/search?q=' + q + '&tbas=0&tbs=isz:lt,islt:2mp&tbm=isch')
+    //cli_urls.push('https://www.google.com/search?q=' + q + '&tbas=0&tbs=isz:lt,islt:2mp&tbm=isch')
+    cli_urls.push('https://www.google.com/search?q=' + q + '&tbas=0&tbs=isz:lt,islt:4mp&tbm=isch')
 });
 
 casper.echo(cli_urls);
@@ -151,7 +152,7 @@ function handle_page(casper) {
         return;
     }
 
-    var aa = this.evaluate(function () {
+    var aa = casper.evaluate(function () {
         return {scrollY: window.scrollY, innerHeighth: window.innerHeight, scrollHeight: document.body.scrollHeight}
     });
 
